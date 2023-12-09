@@ -1,0 +1,54 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Morgly.API", "Morgly.API\Morgly.API.csproj", "{47077F18-2F25-467E-AAB1-C52EC9248626}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Morgly.Application", "Morgly.Application\Morgly.Application.csproj", "{D3880565-2163-41CB-822A-CC9213142164}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Morgly.Infrastructure", "Morgly.Infrastructure\Morgly.Infrastructure.csproj", "{B37C86DA-762C-4AFC-B199-6415BF2AE5CE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Morgly.Query", "Morgly.Query\Morgly.Query.csproj", "{B94AF0F2-5398-4EC5-81EA-8F1F01DE4D94}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Morgly.Domain", "Morgly.Domain\Morgly.Domain.csproj", "{7BA6B265-AF64-4838-9BD3-6A28FEFB0F50}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Morgly.Application.Tests", "Morgly.Application.Tests\Morgly.Application.Tests.csproj", "{29537BDA-6E42-4891-BA58-FCD04A6211E4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{47077F18-2F25-467E-AAB1-C52EC9248626}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47077F18-2F25-467E-AAB1-C52EC9248626}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47077F18-2F25-467E-AAB1-C52EC9248626}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47077F18-2F25-467E-AAB1-C52EC9248626}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3880565-2163-41CB-822A-CC9213142164}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3880565-2163-41CB-822A-CC9213142164}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3880565-2163-41CB-822A-CC9213142164}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3880565-2163-41CB-822A-CC9213142164}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B37C86DA-762C-4AFC-B199-6415BF2AE5CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B37C86DA-762C-4AFC-B199-6415BF2AE5CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B37C86DA-762C-4AFC-B199-6415BF2AE5CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B37C86DA-762C-4AFC-B199-6415BF2AE5CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B94AF0F2-5398-4EC5-81EA-8F1F01DE4D94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B94AF0F2-5398-4EC5-81EA-8F1F01DE4D94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B94AF0F2-5398-4EC5-81EA-8F1F01DE4D94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B94AF0F2-5398-4EC5-81EA-8F1F01DE4D94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BA6B265-AF64-4838-9BD3-6A28FEFB0F50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BA6B265-AF64-4838-9BD3-6A28FEFB0F50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BA6B265-AF64-4838-9BD3-6A28FEFB0F50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BA6B265-AF64-4838-9BD3-6A28FEFB0F50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29537BDA-6E42-4891-BA58-FCD04A6211E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29537BDA-6E42-4891-BA58-FCD04A6211E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29537BDA-6E42-4891-BA58-FCD04A6211E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29537BDA-6E42-4891-BA58-FCD04A6211E4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4CBAC526-6775-4CFB-950F-3A287F2915E3}
+	EndGlobalSection
+EndGlobal
