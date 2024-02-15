@@ -6,6 +6,7 @@ import { Home } from './Home';
 import { Container } from 'react-bootstrap';
 import BasicExample from './Navbar';
 import { ListItems } from './ListItems';
+import { ListApplications } from './applications/ListApplications';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/create" element={<CreateItem />} />
         <Route path="/list" element={<ListItems />} />
+        <Route path="/list-applications" element={<ListApplications />} />
       </Routes>
 
     </div>

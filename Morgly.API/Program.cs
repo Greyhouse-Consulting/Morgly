@@ -91,7 +91,7 @@ try
     //builder.Services.AddScoped(x => x.GetRequiredService<IMongoClient>().GetDatabase("morg"));
     builder.Services.AddScoped(x => x.GetRequiredService<IMongoClient>().StartSession());
     builder.Services.AddScoped(x => x.GetRequiredService<IMongoClient>().GetDatabase("morg").GetCollection<IntegrationEventContainer>("IntegrationEvents"));
-    builder.Services.AddScoped(x => x.GetRequiredService<IMongoClient>().GetDatabase("morg").GetCollection<Morgly.Domain.Entities.Mortgage>("mortgages"));
+    builder.Services.AddScoped(x => x.GetRequiredService<IMongoClient>().GetDatabase("morg").GetCollection<Mortgage>("mortgages"));
     builder.Services.AddScoped(x => x.GetRequiredService<IMongoClient>().GetDatabase("morg").GetCollection<MortgageApplication>("applications"));
     //builder.Services.AddScoped(x => x.GetRequiredService<IClientSessionHandle>().Client.GetDatabase("morg").GetCollection<IntegrationEvent>("IntegrationEvents"));
 

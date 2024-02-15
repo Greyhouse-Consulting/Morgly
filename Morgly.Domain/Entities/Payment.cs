@@ -1,16 +1,9 @@
 ﻿namespace Morgly.Domain.Entities;
 
 // Create class payment with amount and date and due date
-public class Payment
+public class Payment(decimal amount, DateTime date, DateOnly dueDate)
 {
-    public decimal Amount { get; }
-    public DateTime Date { get; }
-    public DateTime DueDate { get; }
-
-    public Payment(decimal amount, DateTime date, DateTime dueDate)
-    {
-        Amount = amount;
-        Date = date;
-        DueDate = dueDate;
-    }
+    public decimal Amount { get; } = amount;
+    public DateTime Date { get; } = date;
+    public DateOnly DueDate { get; } = dueDate;
 }

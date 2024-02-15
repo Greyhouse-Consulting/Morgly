@@ -1,21 +1,38 @@
 import pika, os, time
 import json
 import xgboost as xgb
+import numpy as np
 
 # Load model
 xgb_classifier = xgb.XGBClassifier()
 xgb_classifier.load_model('model.json')
 
 
+# create a function that takes to intergers and returns their sum
+
+
+
+
+
+
+
+
+
+
+
+
+
 def pdf_process_function(channel, msg):
   print(" PDF processing")
   print(" [x] Received " + str(msg))
 
+
+ 
   data =json.loads(msg)
 
   print(data["message"]["amount"])
 
-  amount = float(data["message"]["amount"])  
+  amount = np.log( float(data["message"]["amount"]))  
   print(amount)
   x  =[[1,	0,	0,	1,	0,	amount,	360.0,	1.000000,	1,	14.489984,	0.000000,	14.489984]]
   p = xgb_classifier.predict(x)
@@ -55,8 +72,6 @@ def callback(ch, method, properties, body):
 channel.basic_consume('credit_validator',
   callback,
   auto_ack=True)
-
-
 
 # start consuming (blocks)
 

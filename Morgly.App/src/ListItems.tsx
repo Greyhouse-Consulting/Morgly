@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Button, Container, Modal, Table } from "react-bootstrap";
-import ItemService from "./services/ItemService";
+import MortgageService from "./services/ItemService";
 import { Item2 } from "./Item";
+import { MortagePayments } from "./mortagepayments/MortgagePayments";
 
 
 export class ListItems extends Component<{}, {  show: boolean, selectedId:string, selectedName:string, items: Item2[] }> {
@@ -12,7 +13,7 @@ export class ListItems extends Component<{}, {  show: boolean, selectedId:string
     }
     
     loadItems = async () => {
-        ItemService
+        MortgageService
         .GetItems()
         .then(data => {
 
@@ -24,7 +25,7 @@ export class ListItems extends Component<{}, {  show: boolean, selectedId:string
     deleteItem = ( ) => {
         console.log("Deleting: ", this.state.selectedId)
 
-        ItemService
+        MortgageService
         .Delete(this.state.selectedId)
         .then(async () => {
             await this.loadItems().then(async () => {
@@ -64,11 +65,11 @@ componentDidMount(): void {
     <thead>
     <tr>
         <th>Status</th>
-        <th></th>
         <th>Loan Id</th>        
         <th>Amount</th>        
         <th>Original Amount</th>        
-        <th>Expires</th>        
+        <th></th>
+        <th></th>        
             </tr>
     </thead>
     <tbody>        
@@ -110,6 +111,6 @@ interface RowItemProps {
 }
 
 const RowItemComponent : React.FC<RowItemProps> = ({ id, name, amount, originalAmount, onDelete }) => {
-    return (<tr ><td></td><td><Button variant="warning" onClick={() => onDelete(id)}>Delete</Button></td><td>{id}</td><td>{amount}</td><td>{originalAmount}</td></tr>);
+    return (<tr ><td></td><td>{id}</td><td>{amount}</td><td>{originalAmount}</td><td><MortagePayments id={id}/></td><td><Button variant="warning" onClick={() => onDelete(id)}>Delete</Button></td></tr>);
 
 }

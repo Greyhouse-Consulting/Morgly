@@ -3,7 +3,7 @@ import { Item2 } from "../Item";
 
 
 const baseUrl : string = "https://localhost:7158/Mortgages";
-class ItemService {
+class MortgageService {
 
     public async GetItems() : Promise<Item2[]>{          
             var d = await axios.get<Item2[]>('https://localhost:7158/Mortgages');
@@ -15,4 +15,4 @@ class ItemService {
     }
 }
 
-export default new ItemService();
+export default new MortgageService();

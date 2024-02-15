@@ -12,15 +12,16 @@ namespace Morgly.Application.Tests.Entities
         public void AddTerm_ShouldAddTerm_WhenTermStartsDirectlyAfterLastTerm()
         {
             // Arrange
-            var sut = _fixture.Create<Mortgage>();
+            var sut = new Mortgage(Guid.NewGuid(), 100000, new Term(DateTime.Now.ToTermDate(), 12, 3.5m));
             var lastTerm = sut.GetLastTerm();
             var newTerm = new Term(lastTerm.GetEndDate().AddMonths(1), 12, 5);
 
             // Act
-            sut.AddTerm(lastTerm.GetEndDate().AddMonths(1), 12, 5);
+            sut.AddTerm(lastTerm.GetEndDate().AddMonths(1).ToDateOnly(), 12, 5);
 
             // Assert
-            sut.GetLastTerm().ShouldBe(newTerm);
+            Term term = sut.GetLastTerm();
+            term.ShouldBe(newTerm);
         }
 
         [Fact]
@@ -31,7 +32,7 @@ namespace Morgly.Application.Tests.Entities
             var lastTerm = sut.GetLastTerm();
 
             // Act & Assert
-            Assert.Throws<Exception>(() => sut.AddTerm(lastTerm.GetEndDate().AddMonths(2), 12, 5));
+            Assert.Throws<Exception>(() => sut.AddTerm(lastTerm.GetEndDate().AddMonths(2).ToDateOnly(), 12, 5));
         }
 
         [Fact]

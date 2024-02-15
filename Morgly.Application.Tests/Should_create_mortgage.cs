@@ -3,87 +3,62 @@ using MediatR;
 using Moq;
 using Morgly.Application.Features.Mortgage.Command;
 using Morgly.Application.Interfaces;
+using Morgly.Domain.Repositories;
 using Shouldly;
 
 namespace Morgly.Application.Tests;
 
 
-
-
+// Generate tests  for CreateMortgageCommandHandler
 public class Should_create_mortgage
 {
-    // Create unittet for CreatemortgageCommandhandler
-    //[Fact]
-    //public async Task Given_CreateMortgageCommand_When_handling_correct_command_Then_Create_mortgage()
-    //{
-    //    // Arrange
-    //    var fixture = new Fixture();
-    //    var uowMock = new Mock<IUnitOfWork>();
-    //    var mediatorMock = new Mock<IMediator>();
-    //    var sut = new CreateMortgageCommandHandler(uowMock.Object, mediatorMock.Object);
+    private readonly Fixture _fixture = new();
+    private readonly Mock<IUnitOfWork> _uowMock = new();
+    private readonly Mock<IMediator> _mediatorMock = new();
+    private readonly Mock<IMortgageRepository> _mortgageRepositoryMock = new();
+    private readonly Mock<IEventRepository> _eventRepositoryMock = new();
+    private readonly Mock<TransactionIdHolder> _transactionIdHolderMock = new();
 
-    //    var command = fixture.Build<CreateMortgageCommand>().FromFactory<string,decimal,int>((name, interestRate, termInMonths) 
-    //        => new CreateMortgageCommand(name, interestRate, 1000000, termInMonths))
-    //        .Create();
+    [Fact]
+    public async Task When_amount_is_less_than_1000000()
+    {
+        // Arrange
+        var command = _fixture.Create<CreateMortgageCommand>();
+        var sut = new CreateMortgageCommandHandler(
+                       _uowMock.Object,
+                                  _mediatorMock.Object,
+                                  _mortgageRepositoryMock.Object,
+                                  _eventRepositoryMock.Object,
+                                  _transactionIdHolderMock.Object);
 
-    //    // Act
-    //    var result = await sut.Handle(command, CancellationToken.None);
+        // Act
+        await sut.Handle(command, CancellationToken.None);
 
-    //    // Assert
-    //    uowMock.Verify(x => x.Add(It.IsAny<Domain.Entities.Mortgage>()), Times.Once);
-    //    uowMock.Verify(x => x.SaveChanges(It.IsAny<CancellationToken>()), Times.Once);
-    //    mediatorMock.Verify(x => x.Publish(It.IsAny<IMortgageCreatedEvent>(), It.IsAny<CancellationToken>()), Times.Once);
-    //    result.ShouldNotBe(Guid.Empty);
+        // Assert
+        _mortgageRepositoryMock.Verify(x => x.Add(It.IsAny<Domain.Entities.Mortgage>()), Times.Once);
+        _uowMock.Verify(x => x.SaveChanges(CancellationToken.None), Times.Once);
+        _mediatorMock.Verify(x => x.Publish(It.IsAny<MortgageCreatedEvent>(), CancellationToken.None), Times.Once);
+    }
 
-    //    // Update test
-    //    result.ShouldBeOfType<Guid>();
-    //}
+    [Fact]
+    public async Task When_amount_is_greater_than_1000000()
+    {
+        // Arrange
+        var command = new CreateMortgageCommand ("asd", 2m, 1000001, 12);
+        var sut = new CreateMortgageCommandHandler(
+                       _uowMock.Object,
+                                  _mediatorMock.Object,
+                                  _mortgageRepositoryMock.Object,
+                                  _eventRepositoryMock.Object,
+                                  _transactionIdHolderMock.Object);
 
+        // Act
+        var exception = await Should.ThrowAsync<Exception>(async () => await sut.Handle(command, CancellationToken.None));
 
-
-
-    // Test that CreateMortgageCommandHandler throws exception when amount is to large
-    //[Fact]
-    //public async Task
-    //    Given_CreateMortgageCommand_When_handling_command_with_amount_greater_than_1000000_Then_throw_exception()
-    //{
-    //    // Arrange
-    //    var fixture = new Fixture();
-    //    var uowMock = new Mock<IUnitOfWork>();
-    //    var mediatorMock = new Mock<IMediator>();
-    //    var sut = new CreateMortgageCommandHandler(uowMock.Object, mediatorMock.Object);
-
-    //    var command = fixture.Build<CreateMortgageCommand>().FromFactory<string, decimal, int>((name, interestRate, termInMonths)
-    //                   => new CreateMortgageCommand(name, interestRate, 1000001, termInMonths))
-    //        .Create();
-
-    //    // Act
-    //    var result = await Should.ThrowAsync<Exception>(async () => await sut.Handle(command, CancellationToken.None));
-
-    //    // Assert
-    //    result.Message.ShouldBe("monthlyPayment cannot be greater than 1000000");
-    //}
-
-
-    // Test that CreateMortgageCommandHandler publish event when mortgage is created
-    //[Fact]
-    //public async Task
-    //    Given_CreateMortgageCommand_When_handling_correct_command_Then_publish_event()
-    //{
-    //    // Arrange
-    //    var fixture = new Fixture();
-    //    var uowMock = new Mock<IUnitOfWork>();
-    //    var mediatorMock = new Mock<IMediator>();
-    //    var sut = new CreateMortgageCommandHandler(uowMock.Object, mediatorMock.Object);
-
-    //    var command = fixture.Build<CreateMortgageCommand>().FromFactory<string, decimal, int>((name, interestRate, termInMonths)
-    //                              => new CreateMortgageCommand(name, interestRate, 1000000, termInMonths))
-    //        .Create();
-
-    //    // Act
-    //    var result = await sut.Handle(command, CancellationToken.None);
-
-    //    // Assert
-    //    mediatorMock.Verify(x => x.Publish(It.IsAny<IMortgageCreatedEvent>(), It.IsAny<CancellationToken>()), Times.Once);
-    //}
+        // Assert
+        exception.Message.ShouldBe("monthlyPayment cannot be greater than 1000000");
+        _mortgageRepositoryMock.Verify(x => x.Add(It.IsAny<Domain.Entities.Mortgage>()), Times.Never);
+        _uowMock.Verify(x => x.SaveChanges(CancellationToken.None), Times.Never);
+        _mediatorMock.Verify(x => x.Publish(It.IsAny<MortgageCreatedEvent>(), CancellationToken.None), Times.Never);
+    }
 }

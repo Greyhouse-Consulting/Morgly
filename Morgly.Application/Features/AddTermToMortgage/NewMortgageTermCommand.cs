@@ -2,18 +2,11 @@
 
 namespace Morgly.Application.Features.AddTermToMortgage;
 
-public class NewMortgageTermCommand : IRequest
+public class NewMortgageTermCommand(Guid mortgageId, DateTime startDate, int lengthInMonths, decimal interestRate)
+    : IRequest
 {
-    public int LengthInMonths { get; }
-    public decimal InterestRate { get; }
-    public Guid MortgageId { get; }
-    public DateTime StartDate { get; }
-
-    public NewMortgageTermCommand(Guid mortgageId, DateTime startDate, int lengthInMonths, decimal interestRate)
-    {
-        LengthInMonths = lengthInMonths;
-        InterestRate = interestRate;
-        MortgageId = mortgageId;
-        StartDate = startDate;
-    }
+    public int LengthInMonths { get; } = lengthInMonths;
+    public decimal InterestRate { get; } = interestRate;
+    public Guid MortgageId { get; } = mortgageId;
+    public DateTime StartDate { get; } = startDate;
 }

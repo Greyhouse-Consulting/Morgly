@@ -20,6 +20,8 @@ namespace Morgly.Domain.Entities
         }
     }
 
+    
+
     public class DomainEvent : INotification
     {
     }
@@ -34,7 +36,7 @@ namespace Morgly.Domain.Entities
     public class Mortgage(Guid id, decimal amount, Term initialTerm) : Entity
     {
         private readonly IList<Term> _terms = new List<Term> { initialTerm };
-        public Guid Id { get; } = id;
+        public Guid Id { get; set; } = id;
 
         private decimal _amount = amount;
         public decimal Amount => _amount;
@@ -44,43 +46,16 @@ namespace Morgly.Domain.Entities
 
         public List<Payment> Payments { get; } = new();
 
-        // Create method that adds a term to mortgage. It is not allowed to add a new term if the last term intersects with the new term.
 
-        
- 
+        public IReadOnlyCollection<Term> GetTerms() => _terms.AsReadOnly();
 
-        //// Create method that adds a term to mortgage. It is not allowed to add a new term if the last term intersects with the new term.
-        //public void AddTerm(Term term)
-        //{
-        //    var lastTerm = _terms[^1];  
-
-        //    if (lastTerm.GetEndDate() > term.StartDate)
-        //    {
-        //        throw new Exception("New term cannot start before the end of the last term");
-        //    }
-
-        //    _terms.Add(term);
-
-        //    AddDomainEvent(new MortgageTermAddedEvent(Id, term.StartDate, term.NumberOfMonths));
-        //}
-
-
-        // Create method that adds a term to mortgage. It is not allowed to add a new term if it not is directly after the last term in on a monthly basis. Day should not be part of the comparison.
-        //public void AddTerm(Term term)
-        //{
-        //    var lastTerm = _terms[^1];
-        //    var expectedStartDate = lastTerm.GetEndDate().AddMonths(1);
-
-
-        //    if (!AreDatesEqualIgnoringDay(expectedStartDate, term.StartDate))
-        //    {
-        //        throw new Exception("New term must start directly after the end of the last term");
-        //    }
-
-        //    _terms.Add(term);
-
-        //    AddDomainEvent(new MortgageTermAddedEvent(Id, term.StartDate, term.NumberOfMonths));
-        //}
+        // Method that returns the next term start date
+        public DateOnly GetNextTermStartDate()
+        {
+            var lastTerm = _terms[^1];
+            return lastTerm.GetEndDate().AddMonths(1).ToDateOnly();
+        }
+     
 
         public void AddSequentialTerm(Term term)
         {
@@ -108,7 +83,7 @@ namespace Morgly.Domain.Entities
             var monthlyInterest = Amount * (_terms[0].InterestRate / 100) / 12;
             var monthlyPayment = monthlyInterest + monthlyPrincipal;
 
-            return new Payment(monthlyPayment, date, _terms[0].GetEndDate());
+            return new Payment(monthlyPayment, date, _terms[0].GetEndDate().ToDateOnly());
         }
 
 
@@ -158,7 +133,7 @@ namespace Morgly.Domain.Entities
             return GetLastTerm().InterestRate;
         }
 
-        public void AddTerm(DateTime startDate, int lengthInMonths, decimal interestRate) =>
+        public void AddTerm(DateOnly startDate, int lengthInMonths, decimal interestRate) =>
             AddSequentialTerm(new Term(startDate, lengthInMonths, interestRate));
         }
 

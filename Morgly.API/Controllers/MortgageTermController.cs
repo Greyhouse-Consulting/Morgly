@@ -1,26 +1,27 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Morgly.Application.Features.AddTermToMortgage;
+using Morgly.Application.Interfaces;
 
 namespace Morgly.API.Controllers;
 
 [ApiController]
 [Route("/mortgages/{id}/terms")]
-public class MortgageTermController : ControllerBase
+[Tags("mortgage-terms")]
+public class MortgageTermController(IMediator mediator, IMortgageRepository repository) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public MortgageTermController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpPost]
     public async Task<IActionResult> Create(Guid id, NewMortgageTermRequest request)
     {
-        await _mediator.Send(new NewMortgageTermCommand(id, request.StartDate, request.LengthInMonths, request.InterestRate));
-
+        await mediator.Send(new NewMortgageTermCommand(id, request.StartDate, request.LengthInMonths, request.InterestRate));
         return Ok();
+    }
+
+    // TODO: Add GET method to get all terms for a mortgage
+    [HttpGet]
+    public async Task<IActionResult> Get(Guid id)
+    {
+        return Ok(await repository.GetTerms(id));
     }
 }
 

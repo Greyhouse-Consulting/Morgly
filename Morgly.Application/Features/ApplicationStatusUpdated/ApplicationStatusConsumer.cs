@@ -21,6 +21,10 @@ public class ApplicationStatusConsumer(IApplicationRepository applicationReposit
     }
 }
 
+    
+
+
+
 public class ApplicationStatusEvent
 {
     public Guid ApplicationId { get; set; }
