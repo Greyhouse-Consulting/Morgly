@@ -3,6 +3,7 @@ import { Application } from "./application";
 import ApplicationService from "../services/ApplicationService";
 import { Button, Container, Modal, Table } from "react-bootstrap";
 import { MortagePayments } from "../mortagepayments/MortgagePayments";
+import { Link } from "react-router-dom";
 
 
 export class ListApplications extends Component<{}, { show: boolean, selectedId: string, selectedName: string, items: Application[] }> {
@@ -104,8 +105,7 @@ interface RowItemProps {
 }
 
 const RowItemComponent: React.FC<RowItemProps> = ({ id, status, amount, onDelete }) => {
-    return (<tr ><td>{id}</td><td>{status}</td><td>{amount}</td><td><Button variant="warning" onClick={() => onDelete(id)}>Delete</Button></td> </tr>);
-
+    return (<tr ><td>{id}</td><td>{status}</td><td>{amount}</td><td><Button variant="warning" onClick={() => onDelete(id)}>Delete</Button></td><td><Link to={ `/create-mortgage/${id}`}>Create</Link></td> </tr>);
 }
 
 
