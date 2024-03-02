@@ -1,7 +1,8 @@
 import { Component } from "react";
-import { Button, Modal, Table } from "react-bootstrap";
+
 import { MortgageTerm } from "./MortgageTerm";
 import MortgageTermsService from "../services/MortgageTermsService";
+import { Button } from "@mui/material";
 
 export class ShowMortgageTerms extends Component<{id: string}, { id: string, show: boolean, previousTerms: MortgageTerm[], currentTerm : MortgageTerm | null, commingTerm: MortgageTerm| null  }> {
 
@@ -34,11 +35,11 @@ export class ShowMortgageTerms extends Component<{id: string}, { id: string, sho
         return (
             <>
             
-            <Button variant="primary" onClick={this.show}>
+            <Button  onClick={this.show}>
               Payments
             </Button>
       
-            <Modal show={this.state.show} onHide={this.close}  size="lg">
+            {/* <Modal show={this.state.show} onHide={this.close}  size="lg">
               <Modal.Header closeButton>
                 <Modal.Title>Upcoming payments</Modal.Title>
               </Modal.Header>
@@ -63,7 +64,7 @@ export class ShowMortgageTerms extends Component<{id: string}, { id: string, sho
                   Close
                 </Button>
               </Modal.Footer>
-            </Modal>
+            </Modal> */}
           </>
         )
     }

@@ -31,7 +31,7 @@ BsonClassMap.RegisterClassMap<Mortgage>(x =>
 //BsonClassMap.RegisterClassMap<IntegrationEventContainer>(x =>
 //{
 //    x.AutoMap();
-//    x.MapIdProperty(id => id.Id);
+//    x.MapIdProperty(id => id.id);
 //});
 
 //BsonClassMap.RegisterClassMap<Morgly.Application.IntegrationEvents.NewMortgageEvent>();

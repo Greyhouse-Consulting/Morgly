@@ -16,8 +16,8 @@ public class ApplicationStatusConsumer(IApplicationRepository applicationReposit
         await applicationRepository.Update(application);
 
         // Get price
-        if (context.Message.Status == "approved")
-            await mediator.Send(new CreateMortgageCommand("adasd",1.0m, application.Amount, 12));
+        //if (context.Message.Status == "approved")
+        //    await mediator.Send(new CreateMortgageCommand("adasd",1.0m, application.Amount, 12));
     }
 }
 

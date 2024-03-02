@@ -24,7 +24,7 @@ public class EventRepository(IMongoCollection<IntegrationEventContainer> collect
 
     public async Task Update(IntegrationEventContainer integrationEventHolder)
     {
-        //        await _collection.ReplaceOneAsync(f => f.Id == integrationEventHolder.Id, integrationEventHolder);
+        //        await _collection.ReplaceOneAsync(f => f.id == integrationEventHolder.id, integrationEventHolder);
         await collection.FindOneAndReplaceAsync(f => f.Id == integrationEventHolder.Id, integrationEventHolder);
     }
 

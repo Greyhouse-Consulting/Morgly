@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
+import MortgageSection from './Mortgage';
+import MortgageService from '../services/MortgageService';
+import { Button, FormControl, TextField } from '@mui/material';
 
 interface ICreateMortgageState {
     applicationId: string;
@@ -14,10 +16,6 @@ interface CreateMortgageProps {
     id?: string;
 }
 
-class MortgageSection {
-    id: string = "";
-    mortgageAmount: number = 0;
-}
 
 const CreateMortgage: React.FC = ({ }) => {
     // const [applicationId, setApplicationId] = useState<string>(id);
@@ -51,6 +49,8 @@ const CreateMortgage: React.FC = ({ }) => {
         }
 
         setValidated(true);
+
+        MortgageService.Create(sections);
     };
 
 
@@ -84,7 +84,7 @@ const CreateMortgage: React.FC = ({ }) => {
 
     const handleAddSection = () => {
         const newSection = new MortgageSection();
-        let myuuid = uuidv4();
+        let myuuid = uuid();
 
         newSection.id = myuuid.toString();
         newSection.mortgageAmount = mortgageAmountLeft;
@@ -142,7 +142,7 @@ const CreateMortgage: React.FC = ({ }) => {
                     Go Back
                 </button>
             </form>
-            <Form noValidate validated={validated} onSubmit={handleSubmit} >
+            <FormControl >
 
                 <table>
                     <thead>
@@ -159,10 +159,7 @@ const CreateMortgage: React.FC = ({ }) => {
                                 <td>{section.mortgageAmount}</td>
                                 <td>
 
-                                    <Form.Group className="mb-3" controlId="formBasicAmount">
-                                        <Form.Label>Amount</Form.Label>
-                                        <Form.Control type="number" placeholder="amount" onChange={(event) => handleAmountChange(event.target.value, section.id)} required />
-                                    </Form.Group>
+                                        <TextField defaultValue="0" type="number" placeholder="amount" onChange={(event) => handleAmountChange(event.target.value, section.id)} required />
 
                                 </td>
                                 <td><button type='button' onClick={() => handleRemoveSection(section.id)} >-</button></td>
@@ -173,7 +170,7 @@ const CreateMortgage: React.FC = ({ }) => {
                 </table>
 
                 <Button type="submit">Create mortgage</Button>
-            </Form>
+            </FormControl>
 
         </div >
     );

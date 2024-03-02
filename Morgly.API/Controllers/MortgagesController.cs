@@ -21,7 +21,7 @@ public class MortgagesController(IMediator mediator, IMortgageRepository mortgag
 
         try
         {
-            var id = await mediator.Send(new CreateMortgageCommand("23232", 1.5m, request.Amount, 3));
+            var id = await mediator.Send(new CreateMortgageCommand("23232", request.Sections));
             return Created("/Mortgages", id);
         }
         catch (Exception)
@@ -32,7 +32,3 @@ public class MortgagesController(IMediator mediator, IMortgageRepository mortgag
     }
 }
 
-public class NewMortgageRequest
-{
-    public decimal Amount { get; set; }
-}

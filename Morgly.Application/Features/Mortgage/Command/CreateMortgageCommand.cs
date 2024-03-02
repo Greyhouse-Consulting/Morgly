@@ -8,25 +8,28 @@ using Morgly.Domain.Entities;
 namespace Morgly.Application.Features.Mortgage.Command;
 
 
-public class CreateMortgageCommand(string name, decimal interestRate, decimal amount, int termInMonths)
+public class CreateMortgageCommand(string name, List<MortgageSection> sections)
     : IRequest<Guid>
 {
-    public string Name { get; } = name;
-    public decimal InterestRate { get; } = interestRate;
-    public decimal Amount { get; } = amount;
-    public int TermInMonths { get; } = termInMonths;
+    public List<MortgageSection> sections { get; } = sections;
 }
 
 public interface IMortgageCreatedEvent
 {
     Guid MortgageId { get; }
-    decimal Amount { get; } // Added property for amount
+    decimal Amount { get; } // Added property for Amount
 }
+
+public class NewMortgageRequest
+{
+    public List<MortgageSection> Sections { get; set; }
+}
+public record MortgageSection(Guid id,  decimal mortgageAmount);
 
 public class MortgageCreatedEvent(Guid mortgageId, decimal amount) : IMortgageCreatedEvent, INotification
 {
     public Guid MortgageId { get; } = mortgageId;
-    public decimal Amount { get; } = amount; // Added property for amount
+    public decimal Amount { get; } = amount; // Added property for Amount
 }
 
 public class CreateMortgageCommandHandler(
@@ -39,25 +42,30 @@ public class CreateMortgageCommandHandler(
 {
     public async Task<Guid> Handle(CreateMortgageCommand request, CancellationToken cancellationToken)
     {
-        if (request.Amount > 1000000)
+
+        foreach (var mortgageSection in request.sections)
         {
-            throw new Exception("monthlyPayment cannot be greater than 1000000");
+            if (mortgageSection.mortgageAmount > 1000000)
+            {
+                throw new Exception("monthlyPayment cannot be greater than 1000000");
+            }
+
+            var startDate = DateTime.Now;
+            var mortgage = new Domain.Entities.Mortgage(Guid.NewGuid(), mortgageSection.mortgageAmount, new Term(new TermDate(startDate.Year, startDate.Month), 12, 3.0m));
+
+            await mortgageRepository.Add(mortgage);
+
+            await uow.SaveChanges(cancellationToken);
+
+            var mortgageCreatedEvent = new MortgageCreatedEvent(mortgage.Id, mortgageSection.mortgageAmount); // Updated constructor call to pass Amount
+
+            await mediator.Publish(mortgageCreatedEvent, cancellationToken);
+
+            eventRepository.Add(new NewMortgageTermsEvent { TransactionId = transactionIdHolder.TransactionId });
         }
 
-        var startDate = DateTime.Now;
-        var mortgage = new Domain.Entities.Mortgage(Guid.NewGuid(), request.Amount, new Term(new TermDate(startDate.Year, startDate.Month), 12, request.InterestRate));
 
-        await mortgageRepository.Add(mortgage);
-
-        await uow.SaveChanges(cancellationToken);
-
-        var mortgageCreatedEvent = new MortgageCreatedEvent(mortgage.Id, request.Amount); // Updated constructor call to pass amount
-
-        await mediator.Publish(mortgageCreatedEvent, cancellationToken);
-
-        eventRepository.Add(new NewMortgageTermsEvent { TransactionId = transactionIdHolder.TransactionId });
-
-        return mortgage.Id;
+        return Guid.NewGuid();
     }
 }
 

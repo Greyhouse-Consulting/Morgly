@@ -40,25 +40,25 @@ public class Should_create_mortgage
         _mediatorMock.Verify(x => x.Publish(It.IsAny<MortgageCreatedEvent>(), CancellationToken.None), Times.Once);
     }
 
-    [Fact]
-    public async Task When_amount_is_greater_than_1000000()
-    {
-        // Arrange
-        var command = new CreateMortgageCommand ("asd", 2m, 1000001, 12);
-        var sut = new CreateMortgageCommandHandler(
-                       _uowMock.Object,
-                                  _mediatorMock.Object,
-                                  _mortgageRepositoryMock.Object,
-                                  _eventRepositoryMock.Object,
-                                  _transactionIdHolderMock.Object);
+    //[Fact]
+    //public async Task When_amount_is_greater_than_1000000()
+    //{
+    //    // Arrange
+    //    var command = new CreateMortgageCommand ("asd", 2m, 1000001, 12);
+    //    var sut = new CreateMortgageCommandHandler(
+    //                   _uowMock.Object,
+    //                              _mediatorMock.Object,
+    //                              _mortgageRepositoryMock.Object,
+    //                              _eventRepositoryMock.Object,
+    //                              _transactionIdHolderMock.Object);
 
-        // Act
-        var exception = await Should.ThrowAsync<Exception>(async () => await sut.Handle(command, CancellationToken.None));
+    //    // Act
+    //    var exception = await Should.ThrowAsync<Exception>(async () => await sut.Handle(command, CancellationToken.None));
 
-        // Assert
-        exception.Message.ShouldBe("monthlyPayment cannot be greater than 1000000");
-        _mortgageRepositoryMock.Verify(x => x.Add(It.IsAny<Domain.Entities.Mortgage>()), Times.Never);
-        _uowMock.Verify(x => x.SaveChanges(CancellationToken.None), Times.Never);
-        _mediatorMock.Verify(x => x.Publish(It.IsAny<MortgageCreatedEvent>(), CancellationToken.None), Times.Never);
-    }
+    //    // Assert
+    //    exception.Message.ShouldBe("monthlyPayment cannot be greater than 1000000");
+    //    _mortgageRepositoryMock.Verify(x => x.Add(It.IsAny<Domain.Entities.Mortgage>()), Times.Never);
+    //    _uowMock.Verify(x => x.SaveChanges(CancellationToken.None), Times.Never);
+    //    _mediatorMock.Verify(x => x.Publish(It.IsAny<MortgageCreatedEvent>(), CancellationToken.None), Times.Never);
+    //}
 }

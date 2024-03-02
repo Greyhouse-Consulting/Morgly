@@ -1,7 +1,8 @@
 import { Component } from "react";
-import { Button, Modal, Table } from "react-bootstrap";
+
 import MortgagePaymentsService from "../services/MortgagePaymentsService";
 import { MortgagePayment } from "./MortgagePayment";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 
 
 export class MortagePayments extends Component<{id: string}, { id: string, show: boolean, items: MortgagePayment[]  }> {
@@ -33,36 +34,36 @@ export class MortagePayments extends Component<{id: string}, { id: string, show:
         return (
             <>
             
-            <Button variant="primary" onClick={this.show}>
+            <Button  onClick={this.show}>
               Payments
             </Button>
       
-            <Modal show={this.state.show} onHide={this.close}  size="lg">
-              <Modal.Header closeButton>
-                <Modal.Title>Upcoming payments</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-              <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>Amount to pay</th>
-                        <th>MonthlyInterest</th>
-                        <th>MonthlyPrincipal</th>
-                        <th>RemainingAmount</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <Dialog open={this.state.show} onClose={this.close}  >
+              <DialogTitle >
+                Upcoming payments
+              </DialogTitle>
+              <DialogContent>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Amount to pay</TableCell>
+                        <TableCell>MonthlyInterest</TableCell>
+                        <TableCell>MonthlyPrincipal</TableCell>
+                        <TableCell>RemainingAmount</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
                     {this.state.items.map((g) => <tr ><td>{g.amount}</td><td>{g.monthlyInterest}</td><td>{g.monthlyPrincipal}</td><td>{g.remainingAmount}</td></tr>)}
-                </tbody>
+                </TableBody>
             </Table>
 
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="primary" onClick={this.close}>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={this.close}>
                   Close
                 </Button>
-              </Modal.Footer>
-            </Modal>
+              </DialogActions>
+            </Dialog>
           </>
         )
     }

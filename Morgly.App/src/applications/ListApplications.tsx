@@ -1,21 +1,24 @@
 import { Component } from "react";
 import { Application } from "./application";
 import ApplicationService from "../services/ApplicationService";
-import { Button, Container, Modal, Table } from "react-bootstrap";
 import { MortagePayments } from "../mortagepayments/MortgagePayments";
 import { Link } from "react-router-dom";
+import { Box, Button, Dialog, DialogActions, DialogContentText, DialogTitle, Table, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { SidePanel } from "../components/SidePanel";
+import { TopMenu } from "../components/TopMenu";
 
 
-export class ListApplications extends Component<{}, { show: boolean, selectedId: string, selectedName: string, items: Application[] }> {
+export class ListApplications extends Component<{}, { show: boolean, selectedId: string, selectedName: string, items: Application[], open: boolean }> {
 
     constructor(props: any) {
         super(props)
-        this.state = { show: false, selectedId: "", selectedName: "", items: [] };
+        this.state = { show: false, selectedId: "", selectedName: "", items: [], open: false};
     }
+
 
     loadItems = async () => {
         ApplicationService
-            .GetItems()            
+            .GetItems()
             .then(data => {
 
                 this.setState({ items: data });
@@ -52,6 +55,13 @@ export class ListApplications extends Component<{}, { show: boolean, selectedId:
         this.setState({ ...this.state, show: true })
     }
 
+    setOpen = () => {
+        this.setState({ ...this.state, open: true })
+    }
+    setClose = () => {
+        this.setState({ ...this.state, open: false })
+    }
+
     componentDidMount(): void {
         this.loadItems();
     }
@@ -60,40 +70,42 @@ export class ListApplications extends Component<{}, { show: boolean, selectedId:
 
         let s = this.state.items;
 
-        return <Container>
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>Application Id</th>
-                        <th>Status</th>
-                        <th>Amount</th>
-                    </tr>
-                </thead>
+        return      <div> <SidePanel open={this.state.open} setOpen={this.setOpen} />
+        <TopMenu open={this.state.open} handleDrawerOpen={this.setOpen} />
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <TableContainer>
+             <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Application Id</TableCell>
+                        <TableCell>Status</TableCell>
+                        <TableCell>Amount</TableCell>
+                    </TableRow>
+                </TableHead>
                 <tbody>
                     {s.map((g) => <RowItemComponent key={g.id} id={g.id} status={g.status} amount={g.amount} onDelete={() => this.deleteConfirm(g.id)} />)}
                 </tbody>
             </Table>
 
-            <Modal
-                show={this.state.show}
-                onHide={this.handleClose}
-                backdrop="static"
-                keyboard={false}
+            <Dialog
+                open={this.state.show}
+                onClose={this.handleClose}
             >
-                <Modal.Header closeButton>
-                    <Modal.Title>Delete item?</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
+                <DialogTitle>
+                    Delete item?
+                </DialogTitle>
+                <DialogContentText>
                     Delete '{this.state.selectedName}' ?
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={this.handleClose}>
+                </DialogContentText>
+                <DialogActions>
+                    <Button  onClick={this.handleClose}>
                         Cancel
                     </Button>
-                    <Button variant="primary" onClick={this.deleteItem}>Confirm</Button>
-                </Modal.Footer>
-            </Modal>
-        </Container>
+                    <Button  onClick={this.deleteItem}>Confirm</Button>
+                </DialogActions>
+            </Dialog>
+            </TableContainer>
+        </Box></div>
     }
 }
 
@@ -105,7 +117,7 @@ interface RowItemProps {
 }
 
 const RowItemComponent: React.FC<RowItemProps> = ({ id, status, amount, onDelete }) => {
-    return (<tr ><td>{id}</td><td>{status}</td><td>{amount}</td><td><Button variant="warning" onClick={() => onDelete(id)}>Delete</Button></td><td><Link to={ `/create-mortgage/${id}`}>Create</Link></td> </tr>);
+    return (<TableRow ><TableCell >{id}</TableCell ><TableCell >{status}</TableCell ><TableCell >{amount}</TableCell ><TableCell ><Button onClick={() => onDelete(id)}>Delete</Button></TableCell ><TableCell ><Link to={`/create-mortgage/${id}`}>Create</Link></TableCell > </TableRow>);
 }
 
 
