@@ -1,18 +1,16 @@
 import { Component } from "react";
 import { Application } from "./application";
 import ApplicationService from "../services/ApplicationService";
-import { MortagePayments } from "../mortagepayments/MortgagePayments";
 import { Link } from "react-router-dom";
-import { Box, Button, Dialog, DialogActions, DialogContentText, DialogTitle, Table, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import { SidePanel } from "../components/SidePanel";
-import { TopMenu } from "../components/TopMenu";
+import { Button, Dialog, DialogActions, DialogContentText, DialogTitle, Table, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+
 
 
 export class ListApplications extends Component<{}, { show: boolean, selectedId: string, selectedName: string, items: Application[], open: boolean }> {
 
     constructor(props: any) {
         super(props)
-        this.state = { show: false, selectedId: "", selectedName: "", items: [], open: false};
+        this.state = { show: false, selectedId: "", selectedName: "", items: [], open: false };
     }
 
 
@@ -70,11 +68,8 @@ export class ListApplications extends Component<{}, { show: boolean, selectedId:
 
         let s = this.state.items;
 
-        return      <div> <SidePanel open={this.state.open} setOpen={this.setOpen} />
-        <TopMenu open={this.state.open} handleDrawerOpen={this.setOpen} />
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-            <TableContainer>
-             <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        return <TableContainer>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         <TableCell>Application Id</TableCell>
@@ -98,14 +93,13 @@ export class ListApplications extends Component<{}, { show: boolean, selectedId:
                     Delete '{this.state.selectedName}' ?
                 </DialogContentText>
                 <DialogActions>
-                    <Button  onClick={this.handleClose}>
+                    <Button onClick={this.handleClose}>
                         Cancel
                     </Button>
-                    <Button  onClick={this.deleteItem}>Confirm</Button>
+                    <Button onClick={this.deleteItem}>Confirm</Button>
                 </DialogActions>
             </Dialog>
-            </TableContainer>
-        </Box></div>
+        </TableContainer>
     }
 }
 

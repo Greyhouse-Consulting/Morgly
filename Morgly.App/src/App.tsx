@@ -1,34 +1,26 @@
-import React from 'react';
-import './App.css';
-import { CreateItem } from './applications/CreateItem';
-import { Route, Routes } from 'react-router-dom';
-import { Home } from './Home';
+import * as React from 'react';
+import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
+import Router from './routes';
+import Dashboard from './Dashboard';
+import ProTip from './ProTip';
+import { BrowserRouter } from 'react-router-dom';
 
-import { ListItems } from './ListItems';
-import { ListApplications } from './applications/ListApplications';
-import CreateMortgage from './mortgage/CreateMortgage';
-import { Box, CssBaseline } from '@mui/material';
-
-function App() {
+function Copyright() {
   return (
-    <div className="App">
-
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        {/* <BasicExample /> */}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/Home" element={<Home />} />
-          <Route path="/create" element={<CreateItem />} />
-          <Route path="/list" element={<ListItems />} />
-          <Route path="/list-applications" element={<ListApplications />} />
-          <Route path="/create-mortgage/:id" element={<CreateMortgage />} />
-        </Routes>
-
-      </Box>
-
-    </div>
+    <Typography variant="body2" color="text.secondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" href="https://mui.com/">
+        Your Website
+      </Link>{' '}
+      {new Date().getFullYear()}.
+    </Typography>
   );
 }
-
-export default App;
+export default function App() {
+  return (
+    <BrowserRouter>
+    <Router />
+    </BrowserRouter>
+  );
+}

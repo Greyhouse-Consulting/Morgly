@@ -43,6 +43,7 @@ const CreateMortgage: React.FC = ({ }) => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         const form = event.currentTarget;
+        console.log("submit");
         if (form.checkValidity() === false || !isFormValid) {
             event.preventDefault();
             event.stopPropagation();
@@ -60,8 +61,9 @@ const CreateMortgage: React.FC = ({ }) => {
     };
 
     const handleCreateMortgage = () => {
-        // Logic to create a mortgage with the application amount
-        // ...
+ 
+        console.log("Creating mortgage with sections: ", sections);
+        MortgageService.Create(sections);
     };
 
     const handleCancel = () => {
@@ -121,7 +123,7 @@ const CreateMortgage: React.FC = ({ }) => {
             <p className={isFormValid ? '' : 'invalid-text'} >Amount left: {mortgageAmountLeft}</p>
 
 
-            <form>
+            <form onSubmit={handleSubmit}>
                 <label htmlFor="mortgageAmount">Mortgage Amount:</label>
                 <input
                     type="number"
@@ -141,7 +143,7 @@ const CreateMortgage: React.FC = ({ }) => {
                 <button type="button" onClick={handleGoBack}>
                     Go Back
                 </button>
-            </form>
+ 
             <FormControl >
 
                 <table>
@@ -171,7 +173,7 @@ const CreateMortgage: React.FC = ({ }) => {
 
                 <Button type="submit">Create mortgage</Button>
             </FormControl>
-
+            </form>
         </div >
     );
 };

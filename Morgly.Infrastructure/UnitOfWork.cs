@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MassTransit.MongoDbIntegration;
+using MongoDB.Driver;
 using Morgly.Application.Interfaces;
 
 namespace Morgly.Infrastructure;
@@ -30,25 +31,40 @@ public class MongoDbTransaction : IMongoDbTransaction
 public class UnitOfWork : IUnitOfWork
 {
     private readonly IMongoClient _client;
+    private readonly MongoDbContext _context;
+    public CancellationTokenSource Cts { get; private set; }
 
-    public UnitOfWork(IMortgageRepository mortgageRepository, IMongoClient client)
+    public IClientSessionHandle? Session { get; set; }
+
+    public UnitOfWork(IMortgageRepository mortgageRepository, IMongoClient client, MongoDbContext context )
     {
         _client = client;
+        _context = context;
         Mortgages = mortgageRepository;
+        Session = context.Session;
     }
 
-    public Task SaveChanges(CancellationToken cancellationToken)
+    public async Task SaveChanges()
     {
-        return Task.CompletedTask;
+        await _context.CommitTransaction(Cts.Token);
+        Cts.Dispose();
     }
+
 
     public IMortgageRepository Mortgages { get; }
 
 
-    public IMongoDbTransaction BeginTransaction()
+    public async Task BeginTransaction()
     {
+        Cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
 
-        return new MongoDbTransaction(_client.StartSession());
+        await _context.BeginTransaction(Cts.Token);
+    }
+
+    public async Task AbortTransaction()
+    {
+        await _context.AbortTransaction(Cts.Token);
+        Cts.Dispose();
     }
     // Add mortgages repository property here
 }

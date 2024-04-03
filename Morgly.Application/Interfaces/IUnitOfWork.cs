@@ -2,9 +2,13 @@
 
 public interface IUnitOfWork
 {
-    Task SaveChanges(CancellationToken cancellationToken);
+    Task SaveChanges();
     IMortgageRepository Mortgages { get; }
-    IMongoDbTransaction BeginTransaction();
+    CancellationTokenSource Cts { get; }
+
+
+    Task BeginTransaction();
+    Task AbortTransaction();
 }
 
 public interface IMongoDbTransaction

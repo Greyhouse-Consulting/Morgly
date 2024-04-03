@@ -1,10 +1,11 @@
-﻿using MongoDB.Driver;
+﻿using MassTransit.MongoDbIntegration;
+using MongoDB.Driver;
 using Morgly.Application.Interfaces;
 using Morgly.Domain.Entities;
 
 namespace Morgly.Infrastructure;
 
-public class ApplicationRepository(IMongoCollection<MortgageApplication> coll) : IApplicationRepository
+public class ApplicationRepository(IMongoCollection<MortgageApplication> coll, MongoDbContext context, IUnitOfWork unitOfWork) : IApplicationRepository
 {
     public async  Task<MortgageApplication> Get(Guid id)
     {
@@ -18,7 +19,7 @@ public class ApplicationRepository(IMongoCollection<MortgageApplication> coll) :
 
     public async Task Add(MortgageApplication application)
     {
-        await coll.InsertOneAsync(application);
+        await coll.InsertOneAsync(context.Session,application, null, unitOfWork.Cts.Token);
     }
 
     public async Task UpdateStatus(Guid messageApplicationId, string messageStatus)
@@ -28,6 +29,6 @@ public class ApplicationRepository(IMongoCollection<MortgageApplication> coll) :
 
     public async Task Update(MortgageApplication application)
     {
-        await coll.ReplaceOneAsync(x => x.Id == application.Id, application);
+        await coll.ReplaceOneAsync(context.Session, x => x.Id == application.Id, application, (ReplaceOptions)null , unitOfWork.Cts.Token);
     }
 }

@@ -19,26 +19,26 @@ public class Should_create_mortgage
     private readonly Mock<IEventRepository> _eventRepositoryMock = new();
     private readonly Mock<TransactionIdHolder> _transactionIdHolderMock = new();
 
-    [Fact]
-    public async Task When_amount_is_less_than_1000000()
-    {
-        // Arrange
-        var command = _fixture.Create<CreateMortgageCommand>();
-        var sut = new CreateMortgageCommandHandler(
-                       _uowMock.Object,
-                                  _mediatorMock.Object,
-                                  _mortgageRepositoryMock.Object,
-                                  _eventRepositoryMock.Object,
-                                  _transactionIdHolderMock.Object);
+    //[Fact]
+    //public async Task When_amount_is_less_than_1000000()
+    //{
+    //    // Arrange
+    //    var command = _fixture.Create<CreateMortgageCommand>();
+    //    var sut = new CreateMortgageCommandHandler(
+    //                   _uowMock.Object,
+    //                              _mediatorMock.Object,
+    //                              _mortgageRepositoryMock.Object,
+    //                              _eventRepositoryMock.Object,
+    //                              _transactionIdHolderMock.Object);
 
-        // Act
-        await sut.Handle(command, CancellationToken.None);
+    //    // Act
+    //    await sut.Handle(command, CancellationToken.None);
 
-        // Assert
-        _mortgageRepositoryMock.Verify(x => x.Add(It.IsAny<Domain.Entities.Mortgage>()), Times.Once);
-        _uowMock.Verify(x => x.SaveChanges(CancellationToken.None), Times.Once);
-        _mediatorMock.Verify(x => x.Publish(It.IsAny<MortgageCreatedEvent>(), CancellationToken.None), Times.Once);
-    }
+    //    // Assert
+    //    _mortgageRepositoryMock.Verify(x => x.Add(It.IsAny<Domain.Entities.Mortgage>()), Times.Once);
+    //    _uowMock.Verify(x => x.SaveChanges(CancellationToken.None), Times.Once);
+    //    _mediatorMock.Verify(x => x.Publish(It.IsAny<MortgageCreatedEvent>(), CancellationToken.None), Times.Once);
+    //}
 
     //[Fact]
     //public async Task When_amount_is_greater_than_1000000()

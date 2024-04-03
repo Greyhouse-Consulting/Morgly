@@ -5,7 +5,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="2.23.1" />
+    <PackageReference Include="MassTransit.MongoDb" Version="8.2.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.24.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Morgly.Application\Morgly.Application.csproj" />

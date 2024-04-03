@@ -1,19 +1,30 @@
 ﻿using MassTransit;
 using MediatR;
-using Morgly.Application.Features.Mortgage.Command;
+
 using Morgly.Application.Interfaces;
 
 namespace Morgly.Application.Features.ApplicationStatusUpdated;
 
-public class ApplicationStatusConsumer(IApplicationRepository applicationRepository, IMediator mediator) : IConsumer<ApplicationStatusEvent>
+public class ApplicationStatusConsumer(IApplicationRepository applicationRepository, IUnitOfWork uow) : IConsumer<ApplicationStatusEvent>
 {
     public async Task Consume(ConsumeContext<ApplicationStatusEvent> context)
     {
-        var application = await applicationRepository.Get(context.Message.ApplicationId);
-        
-        application.Status = context.Message.Status;
-        
-        await applicationRepository.Update(application);
+        await uow.BeginTransaction();
+        try
+        {
+            var application = await applicationRepository.Get(context.Message.ApplicationId);
+
+            application.Status = context.Message.Status;
+
+            await applicationRepository.Update(application);
+
+            await uow.SaveChanges();
+        }
+        catch (Exception )
+        {
+            await uow.AbortTransaction();
+            throw;
+        }
 
         // Get price
         //if (context.Message.Status == "approved")
@@ -21,7 +32,7 @@ public class ApplicationStatusConsumer(IApplicationRepository applicationReposit
     }
 }
 
-    
+
 
 
 

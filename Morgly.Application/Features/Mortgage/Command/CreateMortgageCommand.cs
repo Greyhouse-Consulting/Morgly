@@ -35,36 +35,43 @@ public class MortgageCreatedEvent(Guid mortgageId, decimal amount) : IMortgageCr
 public class CreateMortgageCommandHandler(
     IUnitOfWork uow,
     IMediator mediator,
-    IMortgageRepository mortgageRepository,
-    IEventRepository eventRepository,
-    TransactionIdHolder transactionIdHolder)
+    IMortgageRepository mortgageRepository
+    //IEventRepository eventRepository,
+    //TransactionIdHolder transactionIdHolder
+    )
     : IRequestHandler<CreateMortgageCommand, Guid>
 {
     public async Task<Guid> Handle(CreateMortgageCommand request, CancellationToken cancellationToken)
     {
-
-        foreach (var mortgageSection in request.sections)
+        await uow.BeginTransaction();
+        try
         {
-            if (mortgageSection.mortgageAmount > 1000000)
+            foreach (var mortgageSection in request.sections)
             {
-                throw new Exception("monthlyPayment cannot be greater than 1000000");
+                if (mortgageSection.mortgageAmount > 1000000)
+                {
+                    throw new Exception("monthlyPayment cannot be greater than 1000000");
+                }
+
+                var startDate = DateTime.Now;
+                var mortgage = new Domain.Entities.Mortgage(Guid.NewGuid(), mortgageSection.mortgageAmount, new Term(new TermDate(startDate.Year, startDate.Month), 12, 3.0m));
+
+                await mortgageRepository.Add(mortgage);
+
+                var mortgageCreatedEvent = new MortgageCreatedEvent(mortgage.Id, mortgageSection.mortgageAmount); // Updated constructor call to pass Amount
+
+                await mediator.Publish(mortgageCreatedEvent, cancellationToken);
+
+                //eventRepository.Add(new NewMortgageTermsEvent { TransactionId = transactionIdHolder.TransactionId });
             }
+            await uow.SaveChanges();
 
-            var startDate = DateTime.Now;
-            var mortgage = new Domain.Entities.Mortgage(Guid.NewGuid(), mortgageSection.mortgageAmount, new Term(new TermDate(startDate.Year, startDate.Month), 12, 3.0m));
-
-            await mortgageRepository.Add(mortgage);
-
-            await uow.SaveChanges(cancellationToken);
-
-            var mortgageCreatedEvent = new MortgageCreatedEvent(mortgage.Id, mortgageSection.mortgageAmount); // Updated constructor call to pass Amount
-
-            await mediator.Publish(mortgageCreatedEvent, cancellationToken);
-
-            eventRepository.Add(new NewMortgageTermsEvent { TransactionId = transactionIdHolder.TransactionId });
         }
-
-
+        catch (Exception)
+        {
+            await uow.AbortTransaction();
+            throw;
+        }
         return Guid.NewGuid();
     }
 }

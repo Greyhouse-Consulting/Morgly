@@ -2,8 +2,7 @@
 
 namespace Morgly.Application.IntegrationEvents;
 
-public class ApplicationCreatedEvent(Guid applicationId, decimal amount) : Domain.IntegrationEvents.ApplicationCreatedEvent
-{
-    public Guid ApplicationId { get; } = applicationId;
-    public decimal Amount { get; } = amount;
+public record ApplicationCreatedEvent {
+    public Guid ApplicationId { get; set; } 
+    public decimal Amount { get; set; } 
 }

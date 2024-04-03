@@ -5,7 +5,7 @@ using Morgly.Application.Interfaces;
 namespace Morgly.Application.Features.AddTermToMortgage;
 
 
-public class NewMortgageTermCommandHandler(IUnitOfWork uow, IDomainEventDispatcher dispatcher)
+public class NewMortgageTermCommandHandler(IUnitOfWork uow)
     : IRequestHandler<NewMortgageTermCommand>
 {
     public async Task Handle(NewMortgageTermCommand command, CancellationToken cancellationToken)
@@ -16,7 +16,6 @@ public class NewMortgageTermCommandHandler(IUnitOfWork uow, IDomainEventDispatch
 
         await uow.Mortgages.Update(mortgage);
 
-        await dispatcher.Dispatch(mortgage.DomainEvents, cancellationToken);
     }
 }
 

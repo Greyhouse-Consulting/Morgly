@@ -43,7 +43,7 @@ export class MortagePayments extends Component<{id: string}, { id: string, show:
                 Upcoming payments
               </DialogTitle>
               <DialogContent>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <Table aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         <TableCell>Amount to pay</TableCell>
